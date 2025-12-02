@@ -191,6 +191,10 @@ struct ExportOptionsView: View {
     @State private var projectName = "my_app"
     @State private var isExporting = false
     @State private var exportComplete = false
+    @State private var exportError: String?
+    @State private var showError = false
+
+    private let exportService = ExportService()
 
     var body: some View {
         NavigationView {
@@ -256,19 +260,104 @@ struct ExportOptionsView: View {
         } message: {
             Text("Your Flutter project has been saved.")
         }
+        .alert("Export Error", isPresented: $showError) {
+            Button("OK") { }
+        } message: {
+            Text(exportError ?? "Unknown error occurred")
+        }
     }
 
     private func exportToFiles() {
         isExporting = true
-        // TODO: Implement actual file export
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isExporting = false
-            exportComplete = true
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Create Flutter project
+            guard let projectURL = exportService.createFlutterProject(
+                name: projectName,
+                code: code
+            ) else {
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportError = "Failed to create project"
+                    showError = true
+                }
+                return
+            }
+
+            // Create ZIP archive
+            guard let zipURL = exportService.createZipArchive(projectURL: projectURL) else {
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportError = "Failed to create ZIP archive"
+                    showError = true
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                isExporting = false
+
+                // Share the ZIP file using document picker
+                let activityVC = UIActivityViewController(
+                    activityItems: [zipURL],
+                    applicationActivities: nil
+                )
+
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootVC = windowScene.windows.first?.rootViewController {
+                    // For iPad
+                    activityVC.popoverPresentationController?.sourceView = rootVC.view
+                    activityVC.popoverPresentationController?.sourceRect = CGRect(
+                        x: UIScreen.main.bounds.midX,
+                        y: UIScreen.main.bounds.midY,
+                        width: 0,
+                        height: 0
+                    )
+                    rootVC.present(activityVC, animated: true) {
+                        exportComplete = true
+                    }
+                }
+            }
         }
     }
 
     private func shareProject() {
-        // TODO: Implement ZIP export and share
+        isExporting = true
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Create Flutter project
+            guard let projectURL = exportService.createFlutterProject(
+                name: projectName,
+                code: code
+            ) else {
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportError = "Failed to create project"
+                    showError = true
+                }
+                return
+            }
+
+            // Create ZIP archive
+            guard let zipURL = exportService.createZipArchive(projectURL: projectURL) else {
+                DispatchQueue.main.async {
+                    isExporting = false
+                    exportError = "Failed to create ZIP archive"
+                    showError = true
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                isExporting = false
+
+                // Share the ZIP
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootVC = windowScene.windows.first?.rootViewController {
+                    exportService.shareProject(zipURL: zipURL, from: rootVC)
+                }
+            }
+        }
     }
 }
 

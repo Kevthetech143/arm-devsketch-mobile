@@ -12,8 +12,10 @@ import AVFoundation
 struct CameraView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var cameraService = CameraService()
+    @StateObject private var mlService = MLInferenceService()
     @State private var capturedImage: UIImage?
     @State private var showProcessing = false
+    @State private var showResults = false
 
     var body: some View {
         ZStack {
@@ -94,17 +96,46 @@ struct CameraView: View {
         .onAppear {
             cameraService.checkPermissions()
         }
+        .fullScreenCover(isPresented: $showResults) {
+            resultsSheet
+        }
     }
 
     private func capturePhoto() {
-        // TODO: Implement actual photo capture
         showProcessing = true
 
-        // Simulate processing delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // Placeholder: would capture actual photo here
-            showProcessing = false
-            // Navigate to results view
+        // Capture photo using CameraService
+        cameraService.capturePhoto { image in
+            guard let image = image else {
+                showProcessing = false
+                return
+            }
+
+            // Store captured image
+            capturedImage = image
+
+            // Run ML inference on captured image
+            mlService.detectUIElements(in: image)
+
+            // Wait for inference to complete, then show results
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                showProcessing = false
+                showResults = true
+            }
+        }
+    }
+}
+
+// MARK: - Results Sheet Extension
+extension CameraView {
+    @ViewBuilder
+    var resultsSheet: some View {
+        if let image = capturedImage {
+            ResultsView(
+                capturedImage: image,
+                detections: mlService.detections,
+                inferenceTime: mlService.inferenceTime
+            )
         }
     }
 }

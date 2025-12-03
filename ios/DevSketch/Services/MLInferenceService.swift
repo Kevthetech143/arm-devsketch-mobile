@@ -11,30 +11,57 @@ import CoreML
 import Vision
 import UIKit
 
-/// Maps COCO classes to UI element types for demo purposes
+/// UI Element types from VINS dataset (12 classes)
 enum UIElementType: String, CaseIterable {
-    case button = "button"
-    case textField = "textfield"
-    case label = "label"
-    case text = "text"
-    case image = "image"
-    case icon = "icon"
-    case container = "container"
+    case backgroundImage = "BackgroundImage"
+    case checkedTextView = "CheckedTextView"
+    case icon = "Icon"
+    case editText = "EditText"
+    case image = "Image"
+    case text = "Text"
+    case textButton = "TextButton"
+    case drawer = "Drawer"
+    case pageIndicator = "PageIndicator"
+    case upperTaskBar = "UpperTaskBar"
+    case modal = "Modal"
+    case switchControl = "Switch"
     case unknown = "unknown"
 
-    /// Map detection labels to UI element types
-    static func from(cocoLabel: String) -> UIElementType {
-        // Map common COCO objects to UI elements for demo
-        switch cocoLabel.lowercased() {
-        case "cell phone", "remote", "keyboard":
-            return .button
-        case "book", "laptop":
-            return .container
-        case "tv", "monitor":
-            return .image
-        default:
-            // For demo: treat all rectangles as potential UI elements
-            return .container
+    /// Map VINS detection labels to UI element types
+    static func from(vinsLabel: String) -> UIElementType {
+        switch vinsLabel {
+        case "BackgroundImage": return .backgroundImage
+        case "CheckedTextView": return .checkedTextView
+        case "Icon": return .icon
+        case "EditText": return .editText
+        case "Image": return .image
+        case "Text": return .text
+        case "TextButton": return .textButton
+        case "Drawer": return .drawer
+        case "PageIndicator": return .pageIndicator
+        case "UpperTaskBar": return .upperTaskBar
+        case "Modal": return .modal
+        case "Switch": return .switchControl
+        default: return .unknown
+        }
+    }
+
+    /// Human-readable display name
+    var displayName: String {
+        switch self {
+        case .backgroundImage: return "Background"
+        case .checkedTextView: return "Checkbox"
+        case .icon: return "Icon"
+        case .editText: return "Text Input"
+        case .image: return "Image"
+        case .text: return "Text"
+        case .textButton: return "Button"
+        case .drawer: return "Menu"
+        case .pageIndicator: return "Page Dots"
+        case .upperTaskBar: return "Status Bar"
+        case .modal: return "Dialog"
+        case .switchControl: return "Toggle"
+        case .unknown: return "Unknown"
         }
     }
 }
@@ -80,12 +107,12 @@ class MLInferenceService: ObservableObject {
                 let config = MLModelConfiguration()
                 config.computeUnits = .all  // Use Neural Engine + GPU + CPU
 
-                // Load model from bundle (check both .mlpackage and .mlmodelc)
+                // Load custom UI detector model (trained on VINS dataset)
                 let modelURL: URL? = Bundle.main.url(
-                    forResource: "yolov8n",
+                    forResource: "ui_detector",
                     withExtension: "mlpackage"
                 ) ?? Bundle.main.url(
-                    forResource: "yolov8n",
+                    forResource: "ui_detector",
                     withExtension: "mlmodelc"
                 )
 
@@ -175,13 +202,13 @@ class MLInferenceService: ObservableObject {
 
         // Filter and convert results
         let detections = results
-            .filter { $0.confidence > 0.3 }  // Confidence threshold
+            .filter { $0.confidence > 0.25 }  // Confidence threshold (lower for UI elements)
             .map { observation -> DetectionResult in
                 let topLabel = observation.labels.first?.identifier ?? "unknown"
-                let elementType = UIElementType.from(cocoLabel: topLabel)
+                let elementType = UIElementType.from(vinsLabel: topLabel)
                 return DetectionResult(
                     type: elementType,
-                    label: topLabel,
+                    label: elementType.displayName,
                     confidence: observation.confidence,
                     boundingBox: observation.boundingBox
                 )
@@ -195,7 +222,7 @@ class MLInferenceService: ObservableObject {
 
     /// Get UI element type from detection
     func getUIElementType(for detection: DetectionResult) -> UIElementType {
-        return UIElementType.from(cocoLabel: detection.label)
+        return detection.type
     }
 }
 

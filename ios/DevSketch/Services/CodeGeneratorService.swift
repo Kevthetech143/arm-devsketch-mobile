@@ -118,18 +118,26 @@ class CodeGeneratorService: ObservableObject {
         let label = detection.label ?? detection.type.rawValue.capitalized
 
         switch detection.type {
-        case .button:
+        case .textButton:
             return generateButton(label: label, width: width, height: height)
-        case .textField:
+        case .editText:
             return generateTextField(label: label)
-        case .text, .label:
+        case .text:
             return generateText(text: label)
-        case .container:
-            return generateContainer(width: width, height: height)
-        case .image:
+        case .backgroundImage, .image:
             return generateImagePlaceholder(width: width, height: height)
         case .icon:
             return generateIcon(size: height)
+        case .checkedTextView:
+            return generateCheckbox(label: label)
+        case .switchControl:
+            return generateSwitch(label: label)
+        case .drawer, .modal:
+            return generateContainer(width: width, height: height)
+        case .pageIndicator:
+            return generatePageIndicator()
+        case .upperTaskBar:
+            return "" // Skip status bar - already part of Scaffold
         case .unknown:
             return generateContainer(width: width, height: height)
         }
@@ -253,6 +261,50 @@ class CodeGeneratorService: ObservableObject {
         )
         """
     }
+
+    private func generateCheckbox(label: String) -> String {
+        return """
+        Row(
+          children: [
+            Checkbox(
+              value: false,
+              onChanged: (value) {},
+            ),
+            Text('\(label)'),
+          ],
+        )
+        """
+    }
+
+    private func generateSwitch(label: String) -> String {
+        return """
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('\(label)'),
+            Switch(
+              value: false,
+              onChanged: (value) {},
+            ),
+          ],
+        )
+        """
+    }
+
+    private func generatePageIndicator() -> String {
+        return """
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(width: 8, height: 8, decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle)),
+            SizedBox(width: 8),
+            Container(width: 8, height: 8, decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle)),
+            SizedBox(width: 8),
+            Container(width: 8, height: 8, decoration: BoxDecoration(color: Colors.grey, shape: BoxShape.circle)),
+          ],
+        )
+        """
+    }
 }
 
 // MARK: - Extension for VNRecognizedObjectObservation
@@ -263,7 +315,7 @@ extension CodeGeneratorService {
     func convertObservations(_ observations: [VNRecognizedObjectObservation]) -> [DetectionResult] {
         return observations.compactMap { observation -> DetectionResult? in
             guard let topLabel = observation.labels.first else { return nil }
-            let elementType = UIElementType.from(cocoLabel: topLabel.identifier)
+            let elementType = UIElementType.from(vinsLabel: topLabel.identifier)
 
             return DetectionResult(
                 type: elementType,

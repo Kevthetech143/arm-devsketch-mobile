@@ -130,14 +130,18 @@ struct DetectionOverlay: View {
     }
 
     var colorForElement: Color {
-        let type = UIElementType.from(cocoLabel: detection.label)
+        let type = UIElementType.from(vinsLabel: detection.label)
         switch type {
-        case .button: return .blue
-        case .textField: return .green
-        case .label, .text: return .orange
-        case .image: return .purple
+        case .textButton: return .blue
+        case .editText: return .green
+        case .text: return .orange
+        case .image, .backgroundImage: return .purple
         case .icon: return .pink
-        case .container: return .gray
+        case .drawer, .modal: return .gray
+        case .checkedTextView: return .teal
+        case .switchControl: return .mint
+        case .pageIndicator: return .indigo
+        case .upperTaskBar: return .secondary
         case .unknown: return .gray
         }
     }
@@ -165,7 +169,7 @@ struct DetectionRow: View {
 
             Spacer()
 
-            Text(UIElementType.from(cocoLabel: detection.label).rawValue)
+            Text(UIElementType.from(vinsLabel: detection.label).rawValue)
                 .font(.caption)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -179,27 +183,35 @@ struct DetectionRow: View {
     }
 
     var iconForElement: String {
-        let type = UIElementType.from(cocoLabel: detection.label)
+        let type = UIElementType.from(vinsLabel: detection.label)
         switch type {
-        case .button: return "button.horizontal.fill"
-        case .textField: return "text.cursor"
-        case .label, .text: return "textformat"
-        case .image: return "photo.fill"
+        case .textButton: return "button.horizontal.fill"
+        case .editText: return "text.cursor"
+        case .text: return "textformat"
+        case .image, .backgroundImage: return "photo.fill"
         case .icon: return "star.fill"
-        case .container: return "rectangle.fill"
+        case .drawer, .modal: return "rectangle.fill"
+        case .checkedTextView: return "checkmark.square"
+        case .switchControl: return "switch.2"
+        case .pageIndicator: return "circle.grid.3x3"
+        case .upperTaskBar: return "rectangle.topthird.inset"
         case .unknown: return "questionmark.square.fill"
         }
     }
 
     var colorForElement: Color {
-        let type = UIElementType.from(cocoLabel: detection.label)
+        let type = UIElementType.from(vinsLabel: detection.label)
         switch type {
-        case .button: return .blue
-        case .textField: return .green
-        case .label, .text: return .orange
-        case .image: return .purple
+        case .textButton: return .blue
+        case .editText: return .green
+        case .text: return .orange
+        case .image, .backgroundImage: return .purple
         case .icon: return .pink
-        case .container: return .gray
+        case .drawer, .modal: return .gray
+        case .checkedTextView: return .teal
+        case .switchControl: return .mint
+        case .pageIndicator: return .indigo
+        case .upperTaskBar: return .secondary
         case .unknown: return .gray
         }
     }

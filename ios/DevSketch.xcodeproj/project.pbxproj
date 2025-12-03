@@ -19,6 +19,7 @@
 		A10000090000000000000009 /* CodeGeneratorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000090000000000000009; };
 		A1000000000000000000000A /* ExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A; };
 		A1000000000000000000000B /* yolov8n.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B; };
+		A1000000000000000000000E /* ui_detector.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		A2000000000000000000000A /* ExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportService.swift; sourceTree = "<group>"; };
 		A2000000000000000000000B /* yolov8n.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = yolov8n.mlpackage; sourceTree = "<group>"; };
 		A2000000000000000000000C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000000000000000000000E /* ui_detector.mlpackage */ = {isa = PBXFileReference; lastKnownFileType = folder.mlpackage; path = ui_detector.mlpackage; sourceTree = "<group>"; };
 		A30000000000000000000001 /* DevSketch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DevSketch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 		A50000050000000000000005 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A2000000000000000000000E /* ui_detector.mlpackage */,
 				A2000000000000000000000B /* yolov8n.mlpackage */,
 			);
 			path = Models;
@@ -189,6 +192,7 @@
 				A10000090000000000000009 /* CodeGeneratorService.swift in Sources */,
 				A1000000000000000000000A /* ExportService.swift in Sources */,
 				A1000000000000000000000B /* yolov8n.mlpackage in Sources */,
+				A1000000000000000000000E /* ui_detector.mlpackage in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

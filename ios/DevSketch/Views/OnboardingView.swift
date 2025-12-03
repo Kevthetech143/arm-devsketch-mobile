@@ -15,8 +15,8 @@ struct OnboardingView: View {
     let pages: [OnboardingPage] = [
         OnboardingPage(
             icon: "pencil.and.outline",
-            title: "Sketch Your UI",
-            description: "Draw your mobile app interface on paper. Include buttons, text fields, labels, and images.",
+            title: "Design Your UI",
+            description: "Create or capture any UI mockup. Our AI detects buttons, text fields, labels, and images.",
             color: .blue
         ),
         OnboardingPage(

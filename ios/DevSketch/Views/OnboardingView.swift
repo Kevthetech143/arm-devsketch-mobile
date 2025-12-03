@@ -34,7 +34,7 @@ struct OnboardingView: View {
         OnboardingPage(
             icon: "doc.text.fill",
             title: "Get Flutter Code",
-            description: "Instantly generate production-ready Flutter code. Export complete projects ready to build.",
+            description: "Generate working Flutter code in seconds. Export complete projects ready to build and customize.",
             color: .purple
         )
     ]

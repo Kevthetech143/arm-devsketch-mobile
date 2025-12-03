@@ -121,32 +121,6 @@ arm-devsketch-mobile/
 └── demo/                  # Demo materials
 ```
 
-## 🏆 Judging Criteria Alignment
-
-### Technical Implementation (Score: 9/10)
-- Core ML optimized for Arm Neural Engine
-- Quantized models for mobile efficiency
-- ~250ms inference time on-device
-- Novel on-device sketch-to-code pipeline
-
-### User Experience (Score: 9/10)
-- 3-tap workflow: Capture → Generate → Export
-- Clean, intuitive SwiftUI interface
-- Real-time feedback
-- Production-ready output
-
-### Potential Impact (Score: 8/10)
-- Accelerates prototyping for all mobile developers
-- Open-source templates reusable in other projects
-- Novel paradigm: sketch as code input
-
-### WOW Factor (Score: 9/10)
-- Instant visual transformation (mockup → code)
-- 100% on-device (privacy + speed)
-- Surprising capability on mobile hardware
-
-**Target Score: 35-37/40**
-
 ## 📄 License
 
 MIT License - See LICENSE file for details

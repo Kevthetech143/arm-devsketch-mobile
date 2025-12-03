@@ -1,18 +1,18 @@
 # DevSketch Mobile - Devpost Submission
 
 ## Project Name
-**DevSketch Mobile** - Sketch to Code in Seconds
+**DevSketch Mobile** - UI to Flutter Code in Seconds
 
 ## Tagline
-Transform hand-drawn UI sketches into production-ready Flutter code using 100% on-device AI powered by Arm.
+Transform UI mockups into working Flutter code using 100% on-device AI powered by Arm.
 
 ---
 
 ## Inspiration
 
-Every mobile app starts as a sketch. Developers and designers spend countless hours translating paper mockups into functional code. We asked: what if your phone could do this instantly?
+Every mobile app starts as a design. Developers spend hours manually translating mockups and wireframes into functional code. We asked: what if your phone could do this instantly?
 
-DevSketch Mobile bridges the gap between imagination and implementation. Draw your UI on paper, capture it with your phone, and get real Flutter code in seconds - all powered by on-device AI running on Arm architecture.
+DevSketch Mobile bridges the gap between design and implementation. Capture any UI mockup, and get real Flutter code in seconds - all powered by on-device AI running on Arm architecture. No cloud. No waiting. Just instant code generation.
 
 ---
 
@@ -20,18 +20,18 @@ DevSketch Mobile bridges the gap between imagination and implementation. Draw yo
 
 DevSketch Mobile is an iOS app that:
 
-1. **Captures** your hand-drawn UI sketches using the camera
+1. **Captures** UI mockups and wireframes using the camera or photo upload
 2. **Analyzes** the image using on-device machine learning (Core ML + YOLOv8)
-3. **Detects** UI elements: buttons, text fields, labels, images, containers
-4. **Generates** production-ready Flutter code with Material 3 styling
-5. **Exports** a complete Flutter project ready to run
+3. **Detects** 12 UI element types: buttons, text fields, labels, images, icons, switches, and more
+4. **Generates** working Flutter code with Material 3 styling
+5. **Exports** a complete Flutter project ready to build and customize
 
 **Key Features:**
 - 100% on-device AI processing (no cloud required)
+- Custom YOLOv8 model trained on 4,800+ UI screenshots
 - Real-time inference using Apple Neural Engine (Arm architecture)
-- Material Design 3 compliant code output
-- Full Flutter project export with pubspec.yaml, main.dart, etc.
-- Privacy-first: your sketches never leave your device
+- Complete Flutter project export with pubspec.yaml, main.dart, etc.
+- Privacy-first: your designs never leave your device
 
 ---
 
@@ -40,64 +40,75 @@ DevSketch Mobile is an iOS app that:
 **Architecture:**
 - **iOS App:** SwiftUI for modern, declarative UI
 - **ML Pipeline:** Core ML with Vision framework
-- **Model:** YOLOv8-Nano optimized for mobile (6.2MB)
+- **Model:** Custom YOLOv8-Nano trained on VINS dataset (5.9MB)
 - **Code Generation:** Template-based Flutter widget generation
-- **Export:** Complete Flutter project structure with ZIP export
+- **Export:** Complete Flutter project structure
+
+**Custom Model Training:**
+- Dataset: VINS (Visual Information Navigation System) - 4,800 UI screenshots
+- 12 UI element classes: TextButton, EditText, Text, Image, Icon, Switch, CheckedTextView, Drawer, Modal, PageIndicator, UpperTaskBar, BackgroundImage
+- Training: 50 epochs on Google Colab T4 GPU
+- Export: CoreML with NMS for on-device inference
 
 **Technical Stack:**
 - Swift 5.9 / SwiftUI
 - Core ML / Vision Framework
-- YOLOv8-Nano (quantized for mobile)
+- YOLOv8-Nano (custom trained, CoreML exported)
 - Apple Neural Engine (Arm optimized)
 - Flutter code templates (Material 3)
 
 **Arm Optimization:**
 - Model runs on Apple Neural Engine (Arm-based)
 - MLModelConfiguration.computeUnits = .all
-- Sub-100ms inference on iPhone
+- ~250ms inference on iPhone (on-device)
 - No cloud latency - pure on-device speed
 
 ---
 
 ## Challenges we ran into
 
-1. **Model Selection:** Finding a pre-trained model suitable for UI element detection required research into COCO-class mapping to UI components.
+1. **Custom Model Training:** Pre-trained COCO models don't detect UI elements. We trained a custom YOLOv8 model on the VINS dataset with 12 UI-specific classes.
 
-2. **Real-time Performance:** Optimizing the Core ML pipeline to achieve <100ms inference while maintaining detection accuracy.
+2. **Dataset Selection:** Finding a suitable UI element dataset required research. VINS provided 4,800 labeled UI screenshots with bounding boxes.
 
-3. **Layout Intelligence:** Converting 2D detection boxes into logical Flutter widget hierarchies (rows, columns, spacing).
+3. **CoreML Export:** Converting YOLOv8 PyTorch model to CoreML with NMS (Non-Maximum Suppression) required careful configuration.
 
-4. **Code Quality:** Generating clean, idiomatic Flutter code that developers would actually want to use.
+4. **On-Device Performance:** Balancing detection accuracy with inference speed on mobile hardware. Achieved ~250ms per image.
+
+5. **Code Generation Logic:** Converting 2D bounding boxes into logical Flutter widget hierarchies (rows, columns, proper nesting).
 
 ---
 
 ## Accomplishments that we're proud of
 
-- **Sub-100ms inference** on-device using Arm Neural Engine
-- **Production-ready code output** with proper Material 3 theming
+- **Custom-trained AI model** - Not using generic pre-trained weights, but a purpose-built UI detector
+- **~250ms inference** on-device using Arm Neural Engine
+- **12 UI element types** detected with 85%+ confidence
 - **Complete project export** - not just code snippets, but runnable Flutter apps
-- **Privacy-first design** - zero cloud dependencies
-- **Clean architecture** - modular services for camera, ML, code gen, export
+- **Privacy-first design** - zero cloud dependencies, all processing on-device
+- **Clean architecture** - modular services for camera, ML inference, code generation, export
 
 ---
 
 ## What we learned
 
+- How to train and export custom YOLOv8 models for CoreML
 - The power of on-device ML with Arm's Neural Engine
 - Core ML and Vision framework integration patterns
 - Template-based code generation strategies
-- The importance of user-centric design in AI tools
+- The importance of dataset selection for domain-specific ML tasks
 
 ---
 
 ## What's next for DevSketch Mobile
 
-1. **Fine-tuned UI Model:** Train on actual UI mockup datasets for better accuracy
-2. **Multi-page Support:** Detect navigation flows between screens
-3. **Handwriting Recognition:** Extract text labels from sketches
-4. **More Frameworks:** Support React Native, SwiftUI output
-5. **Real-time Preview:** Live Flutter preview on device
-6. **Figma Integration:** Export directly to Figma for design refinement
+1. **Expand Training Data:** Train on more diverse UI styles (iOS, Material, custom designs)
+2. **Photo Library Import:** Add photo picker for uploading existing mockups
+3. **Improve Accuracy:** Fine-tune model on real-world wireframes and hand-drawn sketches
+4. **Multi-page Support:** Detect navigation flows between screens
+5. **More Frameworks:** Support React Native, SwiftUI code output
+6. **Real-time Preview:** Live Flutter preview on device
+7. **Figma Integration:** Export directly to Figma for design refinement
 
 ---
 
@@ -112,6 +123,8 @@ DevSketch Mobile is an iOS app that:
 - arm
 - neural-engine
 - material-design-3
+- python
+- google-colab
 
 ---
 
@@ -122,13 +135,15 @@ DevSketch Mobile is an iOS app that:
 **Requirements:**
 - iOS 16.0+
 - iPhone with A12 chip or later (Neural Engine)
+- Xcode 14.0+
 
 **Setup:**
 ```bash
 git clone https://github.com/Kevthetech143/arm-devsketch-mobile
 cd arm-devsketch-mobile/ios
 open DevSketch.xcodeproj
-# Build and run on device
+# Select your team in Signing & Capabilities
+# Build and run on device or simulator
 ```
 
 ---
@@ -141,20 +156,18 @@ Built with passion for the Arm AI Developer Challenge 2025.
 
 ## Screenshots
 
-[Include in Devpost gallery]
-1. App home screen
-2. Camera capture view
-3. Detection results with bounding boxes
-4. Generated Flutter code preview
-5. Export options
-6. Running Flutter app from generated code
+1. App home screen - Clean interface with Arm AI branding
+2. Demo mode - Sample wireframe with "Run AI Detection" button
+3. Detection results - Bounding boxes overlay showing detected elements
+4. Generated code - Flutter/Dart code with syntax highlighting
+5. Export options - Copy code or export complete Flutter project
 
 ---
 
 ## Video Demo
 
-[45-second demo video link]
+[Demo video showing: Launch app → Demo mode → Run detection → View results → Generate code → Export]
 
 ---
 
-*DevSketch Mobile - Sketch to code in seconds. 100% on-device. Powered by Arm.*
+*DevSketch Mobile - UI to code in seconds. 100% on-device. Powered by Arm.*

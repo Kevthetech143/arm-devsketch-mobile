@@ -6,13 +6,13 @@ Entry for the [Arm AI Developer Challenge 2025](https://arm-ai-developer-challen
 
 ## 🎯 Overview
 
-DevSketch Mobile is an iOS application that transforms hand-drawn UI sketches into working Flutter code - entirely on your device. No cloud, no latency, just instant code generation powered by Arm AI.
+DevSketch Mobile is an iOS application that transforms UI mockups and wireframes into working Flutter code - entirely on your device. No cloud, no waiting, just instant code generation powered by Arm AI.
 
 ### The Problem
 Building mobile UIs is time-consuming. Designers sketch, developers translate. The iteration cycle is slow.
 
 ### The Solution
-1. 📸 **Capture** - Photo your UI sketch on paper
+1. 📸 **Capture** - Photo or upload any UI mockup
 2. 🤖 **Detect** - AI identifies UI elements (buttons, text fields, labels, etc.)
 3. 💻 **Generate** - Instant Flutter code generation
 4. 📤 **Export** - Complete Flutter project ready to deploy
@@ -26,7 +26,7 @@ Building mobile UIs is time-consuming. Designers sketch, developers translate. T
 ## 🚀 Features
 
 - **Real-time UI Detection**: Identifies buttons, text fields, labels, images, and containers
-- **Flutter Code Generation**: Template-based, production-ready code
+- **Flutter Code Generation**: Template-based, working code ready to customize
 - **On-Device Processing**: All AI inference runs locally on Arm architecture
 - **Instant Preview**: View generated code with syntax highlighting
 - **Export Options**: Full Flutter project structure ready to build
@@ -126,7 +126,7 @@ arm-devsketch-mobile/
 ### Technical Implementation (Score: 9/10)
 - Core ML optimized for Arm Neural Engine
 - Quantized models for mobile efficiency
-- <100ms inference time
+- ~250ms inference time on-device
 - Novel on-device sketch-to-code pipeline
 
 ### User Experience (Score: 9/10)
@@ -141,7 +141,7 @@ arm-devsketch-mobile/
 - Novel paradigm: sketch as code input
 
 ### WOW Factor (Score: 9/10)
-- Instant visual transformation (paper → code)
+- Instant visual transformation (mockup → code)
 - 100% on-device (privacy + speed)
 - Surprising capability on mobile hardware
 

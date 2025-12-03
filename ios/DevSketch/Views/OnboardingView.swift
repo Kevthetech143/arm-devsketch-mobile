@@ -21,8 +21,8 @@ struct OnboardingView: View {
         ),
         OnboardingPage(
             icon: "camera.fill",
-            title: "Capture with Camera",
-            description: "Take a photo of your sketch. Our AI will detect UI elements using Arm-optimized machine learning.",
+            title: "Capture or Upload",
+            description: "Take a photo or upload any UI design. Our AI detects elements using Arm-optimized machine learning.",
             color: .green
         ),
         OnboardingPage(

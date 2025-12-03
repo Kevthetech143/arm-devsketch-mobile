@@ -134,8 +134,9 @@ struct DetectionOverlay: View {
         switch type {
         case .button: return .blue
         case .textField: return .green
-        case .label: return .orange
+        case .label, .text: return .orange
         case .image: return .purple
+        case .icon: return .pink
         case .container: return .gray
         case .unknown: return .gray
         }
@@ -182,8 +183,9 @@ struct DetectionRow: View {
         switch type {
         case .button: return "button.horizontal.fill"
         case .textField: return "text.cursor"
-        case .label: return "textformat"
+        case .label, .text: return "textformat"
         case .image: return "photo.fill"
+        case .icon: return "star.fill"
         case .container: return "rectangle.fill"
         case .unknown: return "questionmark.square.fill"
         }
@@ -194,8 +196,9 @@ struct DetectionRow: View {
         switch type {
         case .button: return .blue
         case .textField: return .green
-        case .label: return .orange
+        case .label, .text: return .orange
         case .image: return .purple
+        case .icon: return .pink
         case .container: return .gray
         case .unknown: return .gray
         }

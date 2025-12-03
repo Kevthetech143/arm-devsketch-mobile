@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import ZIPFoundation
+// import ZIPFoundation // TODO: Add ZIPFoundation package dependency
 
 // MARK: - Export Service
 
@@ -200,6 +200,12 @@ android/.gradle/
 
     /// Create ZIP archive for sharing
     func createZipArchive(projectURL: URL) -> URL? {
+        // TODO: Implement ZIP archive creation with ZIPFoundation package
+        print("ZIP archive creation not yet implemented - add ZIPFoundation dependency")
+        return nil
+
+        // Uncomment when ZIPFoundation is added:
+        /*
         let zipURL = tempDirectory.appendingPathComponent("\(projectURL.lastPathComponent).zip")
 
         do {
@@ -217,6 +223,7 @@ android/.gradle/
             print("Error creating ZIP archive: \(error)")
             return nil
         }
+        */
     }
 
     /// Share via UIActivityViewController

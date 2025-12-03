@@ -11,30 +11,14 @@ import CoreML
 import Vision
 import UIKit
 
-/// Result of UI element detection
-struct DetectionResult: Identifiable {
-    let id = UUID()
-    let label: String
-    let confidence: Float
-    let boundingBox: CGRect  // Normalized coordinates (0-1)
-
-    /// Convert bounding box to view coordinates
-    func boundingBoxInView(size: CGSize) -> CGRect {
-        // Vision uses bottom-left origin, convert to top-left
-        let x = boundingBox.origin.x * size.width
-        let y = (1 - boundingBox.origin.y - boundingBox.height) * size.height
-        let width = boundingBox.width * size.width
-        let height = boundingBox.height * size.height
-        return CGRect(x: x, y: y, width: width, height: height)
-    }
-}
-
 /// Maps COCO classes to UI element types for demo purposes
 enum UIElementType: String, CaseIterable {
     case button = "button"
     case textField = "textfield"
     case label = "label"
+    case text = "text"
     case image = "image"
+    case icon = "icon"
     case container = "container"
     case unknown = "unknown"
 
@@ -52,6 +36,25 @@ enum UIElementType: String, CaseIterable {
             // For demo: treat all rectangles as potential UI elements
             return .container
         }
+    }
+}
+
+/// Result of UI element detection
+struct DetectionResult: Identifiable {
+    let id = UUID()
+    let type: UIElementType
+    let label: String
+    let confidence: Float
+    let boundingBox: CGRect  // Normalized coordinates (0-1)
+
+    /// Convert bounding box to view coordinates
+    func boundingBoxInView(size: CGSize) -> CGRect {
+        // Vision uses bottom-left origin, convert to top-left
+        let x = boundingBox.origin.x * size.width
+        let y = (1 - boundingBox.origin.y - boundingBox.height) * size.height
+        let width = boundingBox.width * size.width
+        let height = boundingBox.height * size.height
+        return CGRect(x: x, y: y, width: width, height: height)
     }
 }
 
@@ -77,12 +80,17 @@ class MLInferenceService: ObservableObject {
                 let config = MLModelConfiguration()
                 config.computeUnits = .all  // Use Neural Engine + GPU + CPU
 
-                // Load model from bundle
-                guard let modelURL = Bundle.main.url(
+                // Load model from bundle (check both .mlpackage and .mlmodelc)
+                let modelURL: URL? = Bundle.main.url(
                     forResource: "yolov8n",
                     withExtension: "mlpackage"
-                ) else {
-                    print("Error: Model file not found in bundle")
+                ) ?? Bundle.main.url(
+                    forResource: "yolov8n",
+                    withExtension: "mlmodelc"
+                )
+
+                guard let modelURL = modelURL else {
+                    print("Error: Model file not found in bundle (checked .mlpackage and .mlmodelc)")
                     return
                 }
 
@@ -170,7 +178,9 @@ class MLInferenceService: ObservableObject {
             .filter { $0.confidence > 0.3 }  // Confidence threshold
             .map { observation -> DetectionResult in
                 let topLabel = observation.labels.first?.identifier ?? "unknown"
+                let elementType = UIElementType.from(cocoLabel: topLabel)
                 return DetectionResult(
+                    type: elementType,
                     label: topLabel,
                     confidence: observation.confidence,
                     boundingBox: observation.boundingBox

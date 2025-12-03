@@ -8,51 +8,13 @@
 
 import Foundation
 import Vision
+import Combine
 
-// MARK: - Detection Result Model
-
-struct DetectionResult: Identifiable {
-    let id = UUID()
-    let type: UIElementType
-    let boundingBox: CGRect  // Normalized 0-1 coordinates
-    let confidence: Float
-    let label: String?
-
-    enum UIElementType: String, CaseIterable {
-        case button
-        case textField
-        case text
-        case label
-        case container
-        case image
-        case icon
-        case unknown
-
-        init(from classLabel: String) {
-            // Map COCO classes to UI elements
-            switch classLabel.lowercased() {
-            case "button", "remote", "cell phone":
-                self = .button
-            case "textfield", "input", "keyboard":
-                self = .textField
-            case "text", "label", "book":
-                self = .text
-            case "container", "box", "rectangle", "tv", "laptop":
-                self = .container
-            case "image", "picture", "person", "frisbee":
-                self = .image
-            case "icon", "clock", "stop sign":
-                self = .icon
-            default:
-                self = .unknown
-            }
-        }
-    }
-}
+// DetectionResult and UIElementType are defined in MLInferenceService.swift
 
 // MARK: - Code Generator Service
 
-class CodeGeneratorService {
+class CodeGeneratorService: ObservableObject {
 
     // MARK: - Properties
 
@@ -299,14 +261,15 @@ extension CodeGeneratorService {
 
     /// Convert Vision observations to DetectionResults
     func convertObservations(_ observations: [VNRecognizedObjectObservation]) -> [DetectionResult] {
-        return observations.compactMap { observation in
+        return observations.compactMap { observation -> DetectionResult? in
             guard let topLabel = observation.labels.first else { return nil }
+            let elementType = UIElementType.from(cocoLabel: topLabel.identifier)
 
             return DetectionResult(
-                type: DetectionResult.UIElementType(from: topLabel.identifier),
-                boundingBox: observation.boundingBox,
+                type: elementType,
+                label: topLabel.identifier,
                 confidence: topLabel.confidence,
-                label: topLabel.identifier
+                boundingBox: observation.boundingBox
             )
         }
     }

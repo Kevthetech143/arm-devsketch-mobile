@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var showCamera = false
     @State private var showOnboarding = true
+    @State private var showDemo = false
 
     var body: some View {
         NavigationView {
@@ -55,16 +56,16 @@ struct ContentView: View {
                     }
 
                     Button(action: {
-                        // TODO: Show example sketches
+                        showDemo = true
                     }) {
                         HStack {
-                            Image(systemName: "photo.on.rectangle")
-                            Text("View Examples")
+                            Image(systemName: "cpu.fill")
+                            Text("Demo Mode")
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.gray.opacity(0.2))
-                        .foregroundColor(.primary)
+                        .background(Color.green.opacity(0.2))
+                        .foregroundColor(.green)
                         .cornerRadius(12)
                     }
 
@@ -106,6 +107,9 @@ struct ContentView: View {
         }
         .fullScreenCover(isPresented: $showCamera) {
             CameraView()
+        }
+        .fullScreenCover(isPresented: $showDemo) {
+            DemoView()
         }
         .sheet(isPresented: $showOnboarding) {
             OnboardingView(isPresented: $showOnboarding)
